@@ -8,7 +8,7 @@ class ParticleExplosion {
    */
   constructor (
     canvasID,
-    particleSpacing = 3,
+    particleSpacing = 5,
     particleColour = [255,255,255,255]
   ) {
     /** @type {HTMLCanvasElement} */
