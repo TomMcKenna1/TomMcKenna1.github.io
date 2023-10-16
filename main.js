@@ -4,14 +4,15 @@ class ParticleExplosion {
    * Create a particle explosion.
    * @param {string} canvasID - The ID of the canvas.
    * @param {number} [particleSpacing=3] - The spacing between particles.
-   * @param {number} [particleColour=[255,255,255,255]] - The colour of the particles.
+   * @param {any} [particleColour=[255,255,255,255]] - The colour of the particles.
    */
   constructor (
     canvasID,
-    particleSpacing = 5,
-    particleColour = [255,255,255,255]
+    particleColour = [255,255,255,255],
+    particleSpacing = 5
   ) {
     /** @type {HTMLCanvasElement} */
+    console.log(particleColour)
     this.canvas = document.getElementById(canvasID);
     this.particlePrototype = {
       ox: 0,
@@ -156,4 +157,19 @@ class ParticleExplosion {
   }
 }
 
-const welcomeExplosion = new ParticleExplosion('interactiveName');
+var r = document.querySelector(':root');
+
+document.getElementById('lightModeButton').addEventListener('click', () => {
+  r.style.setProperty('--mainColour', "rgb(204,204,204)");
+  r.style.setProperty('--contrastColour', "rgb(17,17,17)");
+  r.style.setProperty('--contrastColour--darker', 'rgb(90, 90, 90)');
+})
+
+document.getElementById('darkModeButton').addEventListener('click', () => {
+  r.style.setProperty('--mainColour', "rgb(17,17,17)");
+  r.style.setProperty('--contrastColour', "rgb(204,204,204)");
+  r.style.setProperty('--contrastColour--darker', 'rgb(130, 130, 130)');
+})
+
+const welcomeExplosion = new ParticleExplosion('particleExplosion');
+console.log(r.style.getPropertyValue('--contrastColour'))
