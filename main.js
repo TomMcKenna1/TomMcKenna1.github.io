@@ -34,6 +34,8 @@ class ParticleExplosion {
     this.height;
     this.explosionDiameter;
     this.margin;
+    this.groundZeroX;
+    this.groundZeroY;
 
     this.animateReqID;
 
@@ -68,6 +70,8 @@ class ParticleExplosion {
     this.height = this.canvas.height = height;
 
     this.explosionDiameter = (this.width * this.width);
+    this.groundZeroX = -this.width;
+    this.groundZeroY = -this.height;
     this.margin =  this.height / 8;
 
     this.particles = [];
@@ -87,6 +91,7 @@ class ParticleExplosion {
    * Start the particle animation.
    */
   start = () => {
+    const start = Date.now();
     // Only calculate particle positions every other animation frame.
     if ( this.tic = !this.tic ) {
       this.updateParticles();
@@ -94,6 +99,8 @@ class ParticleExplosion {
     else {
       this.ctx.putImageData( this.getParticleImage(), 0, 0 );
     }
+    const end = Date.now();
+    console.log(end-start)
     this.animateReqID = requestAnimationFrame( this.start );
   }
   
@@ -112,10 +119,10 @@ class ParticleExplosion {
       let particle = this.particles[i];
       const dx = this.groundZeroX - particle.x;
       const dy = this.groundZeroY - particle.y
-      const distanceFromM = dx * dx + dy * dy;
-      const f = -this.explosionDiameter / distanceFromM;
+      const distanceFromGZ = dx * dx + dy * dy;
+      const f = -this.explosionDiameter / distanceFromGZ;
 
-      if ( distanceFromM < this.explosionDiameter ) {
+      if ( distanceFromGZ < this.explosionDiameter ) {
         let t = Math.atan2( dy, dx );
         particle.vx += f * Math.cos(t);
         particle.vy += f * Math.sin(t);
