@@ -36,6 +36,7 @@ class ParticleExplosion {
     this.margin;
     this.groundZeroX;
     this.groundZeroY;
+    this.machinePerformance = 0;
 
     this.animateReqID;
 
@@ -66,8 +67,8 @@ class ParticleExplosion {
    */
   init = () => {
     const { width, height } = this.canvas.getBoundingClientRect()
-    this.width = this.canvas.width = width;
-    this.height = this.canvas.height = height;
+    this.width = this.canvas.width = ~~width;
+    this.height = this.canvas.height = ~~height;
 
     this.explosionDiameter = (this.width * this.width);
     this.groundZeroX = -this.width;
@@ -100,7 +101,11 @@ class ParticleExplosion {
       this.ctx.putImageData( this.getParticleImage(), 0, 0 );
     }
     const end = Date.now();
-    console.log(end-start)
+    const timeTaken = end - start;
+    if (timeTaken > this.machinePerformance) {
+      this.machinePerformance = timeTaken;
+    }
+    console.log(this.machinePerformance)
     this.animateReqID = requestAnimationFrame( this.start );
   }
   
