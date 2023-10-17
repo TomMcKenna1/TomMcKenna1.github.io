@@ -12,9 +12,9 @@
     box-sizing: border-box;
     color: var(--contrastColour);;
     font-family: "Roboto";
-    -webkit-transition: background-color 1000ms, color 1000ms;
-    -ms-transition: background-color 1000ms, color 1000ms;
-    transition: background-color 1000ms, color 1000ms;
+    -webkit-transition: background-color 1000ms, color 1000ms, border 1000ms;
+    -ms-transition: background-color 1000ms, color 1000ms, border 1000ms;
+    transition: background-color 1000ms, color 1000ms, border 1000ms;
 }
 
 body {
@@ -41,7 +41,7 @@ body {
 
 .optionsBar {
     position: sticky;
-    background: var(--contrastColour);
+    z-index: 2;
     width: 100%;
 }
 
@@ -62,6 +62,8 @@ body {
     position: relative;
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
+    padding: 0;
     height: 100%;
     border: 0.2em solid var(--contrastColour);;
     outline-offset: 0.5em;
