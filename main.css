@@ -59,7 +59,8 @@ body {
 }
 
 .container {
-    height: 100vh;
+    height: 100dvh;
+    overscroll-behavior: none;
     padding: 3em;
 }
 
@@ -69,13 +70,14 @@ body {
     padding: 0;
     height: 100%;
     border: 1px solid var(--contrastColour);;
-    outline-offset: 0.5em;
+    scroll-snap-type: y mandatory;
 }
 
 .section-container {
     display: flex;
     flex-direction: column;
     height: 100%;
+    scroll-snap-align: start;
 }
 
 .cardContainer__title {
