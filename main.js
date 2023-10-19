@@ -28,13 +28,17 @@ class ParticleExplosion {
     this.particleSpacing = particleSpacing;
     this.particleColour = particleColour;
     this.mouseFactor = 0.1;
+    this.explosionFactor = 1;
     this.drag = 0.95;
     this.ease = 0.25;
     this.tic = true;
     this.width;
     this.height;
     this.explosionDiameter;
-    this.margin;
+    this.marginTop;
+    this.marginBottom;
+    this.marginLeft;
+    this.marginRight;
     this.groundZeroX;
     this.groundZeroY;
     this.machinePerformance = 0;
@@ -43,14 +47,29 @@ class ParticleExplosion {
 
     this.canvas.addEventListener( 'mousemove', (event) => {
       const { left, top } = this.canvas.getBoundingClientRect()
-      // Set explosion to centre and move with mouse.
-      this.groundZeroX = this.width / 2 + this.mouseFactor * (event.clientX - left - this.width / 2);
-      this.groundZeroY = this.height / 2 + this.mouseFactor * (event.clientY - top - this.height / 2);
+      if (
+        event.clientX - left > this.marginLeft && 
+        event.clientX - left < this.width - this.marginLeft &&
+        event.clientY - top > this.marginTop &&
+        event.clientY - top < this.height - this.marginBottom
+      ) {
+        // Set explosion to centre and move with mouse.
+        this.groundZeroX = (
+          this.width - this.marginRight + this.marginLeft) / 2 
+          + this.mouseFactor * (event.clientX - left - (this.width - this.marginRight + this.marginLeft) / 2);
+        this.groundZeroY = (
+          this.height - this.marginBottom + this.marginTop) / 2 
+          + this.mouseFactor * (event.clientY - top - (this.height - this.marginBottom + this.marginTop) / 2);
+      }
+      else {
+        this.groundZeroX = -this.width * 2;
+        this.groundZeroY = -this.height * 2;
+      }
     });
 
     this.canvas.addEventListener( 'mouseleave', (_event) => {
-      this.groundZeroX = -this.width;
-      this.groundZeroY = -this.height;
+      this.groundZeroX = -this.width*2;
+      this.groundZeroY = -this.height*2;
     });
 
     window.addEventListener( 'resize', () => {
@@ -71,14 +90,20 @@ class ParticleExplosion {
     this.width = this.canvas.width = ~~width;
     this.height = this.canvas.height = ~~height;
 
-    this.explosionDiameter = (this.width * this.width);
-    this.groundZeroX = -this.width;
-    this.groundZeroY = -this.height;
-    this.margin =  this.height / 8;
+    // TODO: Improve this
+    this.marginLeft = this.height / 16;
+    this.marginRight = this.height / 16;
+    this.marginTop = this.height / 16;
+    this.marginBottom = this.height / 2 + this.marginTop
+
+    this.explosionDiameter = (this.width * this.width * this.explosionFactor);
+    const minExplosionFactor = Math.ceil(this.explosionFactor)
+    this.groundZeroX = -this.width * minExplosionFactor;
+    this.groundZeroY = -this.height * minExplosionFactor;
 
     this.particles = [];
-    for (let i = this.margin; i < this.width - this.margin; i += this.particleSpacing) {
-      for (let j = this.margin; j < this.height - this.margin; j += this.particleSpacing) {
+    for (let i = this.marginLeft; i < this.width - this.marginRight; i += this.particleSpacing) {
+      for (let j = this.marginTop; j < this.height - this.marginBottom; j += this.particleSpacing) {
         let particle = Object.create( this.particlePrototype );
         particle.x = particle.ox = i;
         particle.y = particle.oy = j;
