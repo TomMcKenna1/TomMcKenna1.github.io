@@ -12,7 +12,6 @@ class ParticleExplosion {
     particleSpacing = 5
   ) {
     /** @type {HTMLCanvasElement} */
-    console.log(particleColour)
     this.canvas = document.getElementById(canvasID);
     this.particlePrototype = {
       ox: 0,
@@ -45,7 +44,7 @@ class ParticleExplosion {
 
     this.animateReqID;
 
-    this.canvas.addEventListener( 'mousemove', (event) => {
+    this.canvas.addEventListener('mousemove', (event) => {
       const { left, top } = this.canvas.getBoundingClientRect()
       if (
         event.clientX - left > this.marginLeft && 
@@ -67,12 +66,12 @@ class ParticleExplosion {
       }
     });
 
-    this.canvas.addEventListener( 'mouseleave', (_event) => {
-      this.groundZeroX = -this.width*2;
-      this.groundZeroY = -this.height*2;
+    this.canvas.addEventListener('mouseleave', (_event) => {
+      this.groundZeroX = -this.width * 2;
+      this.groundZeroY = -this.height * 2;
     });
 
-    window.addEventListener( 'resize', () => {
+    window.addEventListener('resize', () => {
       this.stop();
       this.init();
       this.start();
@@ -87,6 +86,7 @@ class ParticleExplosion {
    */
   init = () => {
     const { width, height } = this.canvas.getBoundingClientRect()
+    // Bitwise shift (~~) can be used as fast alternative to Math.floor() for positive numbers
     this.width = this.canvas.width = ~~width;
     this.height = this.canvas.height = ~~height;
 
@@ -98,13 +98,13 @@ class ParticleExplosion {
 
     this.explosionDiameter = (this.width * this.width * this.explosionFactor);
     const minExplosionFactor = Math.ceil(this.explosionFactor)
-    this.groundZeroX = -this.width * minExplosionFactor;
-    this.groundZeroY = -this.height * minExplosionFactor;
+    this.groundZeroX = -this.width * 2 * minExplosionFactor;
+    this.groundZeroY = -this.height * 2 * minExplosionFactor;
 
     this.particles = [];
     for (let i = this.marginLeft; i < this.width - this.marginRight; i += this.particleSpacing) {
       for (let j = this.marginTop; j < this.height - this.marginBottom; j += this.particleSpacing) {
-        let particle = Object.create( this.particlePrototype );
+        let particle = Object.create(this.particlePrototype);
         particle.x = particle.ox = i;
         particle.y = particle.oy = j;
         particle.density = Math.random() * 6;
@@ -120,11 +120,11 @@ class ParticleExplosion {
   start = () => {
     const start = Date.now();
     // Only calculate particle positions every other animation frame.
-    if ( this.tic = !this.tic ) {
+    if (this.tic = !this.tic) {
       this.updateParticles();
     } 
     else {
-      this.ctx.putImageData( this.getParticleImage(), 0, 0 );
+      this.ctx.putImageData(this.getParticleImage(), 0, 0);
     }
     const end = Date.now();
     const timeTaken = end - start;
@@ -132,7 +132,7 @@ class ParticleExplosion {
       this.machinePerformance = timeTaken;
     }
     console.log(this.machinePerformance)
-    this.animateReqID = requestAnimationFrame( this.start );
+    this.animateReqID = requestAnimationFrame(this.start);
   }
   
   /**
@@ -146,21 +146,21 @@ class ParticleExplosion {
    * Update the position of particles.
    */
   updateParticles = () => {
-    for ( let i = 0; i < this.particles.length; i++ ) {
+    for (let i = 0; i < this.particles.length; i++) {
       let particle = this.particles[i];
       const dx = this.groundZeroX - particle.x;
       const dy = this.groundZeroY - particle.y
       const distanceFromGZ = dx * dx + dy * dy;
       const f = -this.explosionDiameter / distanceFromGZ;
 
-      if ( distanceFromGZ < this.explosionDiameter ) {
+      if (distanceFromGZ < this.explosionDiameter * 2) {
         let t = Math.atan2( dy, dx );
         particle.vx += f * Math.cos(t);
         particle.vy += f * Math.sin(t);
       }
 
-      particle.x += ( particle.vx *= this.drag ) + (particle.ox - particle.x) * this.ease * particle.density;
-      particle.y += ( particle.vy *= this.drag ) + (particle.oy - particle.y) * this.ease * particle.density; 
+      particle.x += (particle.vx *= this.drag) + (particle.ox - particle.x) * this.ease * particle.density;
+      particle.y += (particle.vy *= this.drag) + (particle.oy - particle.y) * this.ease * particle.density; 
     }
   }
 
@@ -168,11 +168,11 @@ class ParticleExplosion {
    * Update the canvas image.
    */
   getParticleImage = () => {
-    let newParticleImage = this.ctx.createImageData( this.width, this.height )
+    let newParticleImage = this.ctx.createImageData(this.width, this.height)
     let b = newParticleImage.data;
-    for ( let i = 0; i < this.particles.length; i++ ) {
+    for (let i = 0; i < this.particles.length; i++) {
       let p = this.particles[i];
-      let n = (( ~~p.x) + (~~p.y) * this.width) * 4;
+      let n = ((~~p.x) + (~~p.y) * this.width) * 4;
       b[n] = this.particleColour[0];
       b[n+1] = this.particleColour[1];
       b[n+2] = this.particleColour[2];
