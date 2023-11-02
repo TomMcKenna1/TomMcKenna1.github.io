@@ -39,7 +39,7 @@ body {
     background: var(--contrastColour--darker);;
 }
 
-.optionsBar {
+.options-bar {
     position: absolute;
     z-index: 2;
 }
@@ -81,7 +81,7 @@ body {
     scroll-snap-align: start;
 }
 
-.cardContainer__title {
+.card-container__title {
     margin: auto;
     font-size: 4em;
     font-weight: 300;
@@ -96,7 +96,7 @@ body {
 }
 
 @media only screen and (max-width: 650px) {
-    .cardContainer__title {
+    .card-container__title {
       font-size: 2em;
     }
   }
